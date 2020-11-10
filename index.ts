@@ -1,14 +1,6 @@
 import { Observable, Observer } from "rxjs";
 import { map, filter } from "rxjs/operators";
 
-const myObserver: Observer<any> = {
-  next: x => {
-    console.log(x);
-  },
-  error: err => console.error(`Ahh te equivocaste`),
-  complete: () => console.log("mui trabajo aqui esta realizado")
-};
-
 const myObservable = new Observable(subscriber => {
   subscriber.next("holis"),
     subscriber.next(10),
@@ -20,12 +12,24 @@ const myObservable2 = new Observable(subscriber => {
   subscriber.complete();
 });
 
-// myObservable.subscribe(myObserver);
+//El Pipe es inmutable
+//Usarlo para hacer cosas genericas
+//Se ejecuta antes de enviarle el dato al subscribe
 const myPipe = myObservable.pipe(
   filter((r: any) => !isNaN(r)),
   map((r: any) => {
     return r + 10;
   })
 );
+
+//No es es inmutable
+//Usarlo para hacer cosas especificas
+const myObserver: Observer<any> = {
+  next: x => {
+    console.log(x);
+  },
+  error: err => console.error(`Ahh te equivocaste`, err),
+  complete: () => console.log("mui trabajo aqui esta realizado")
+};
 
 myPipe.subscribe(myObserver);
